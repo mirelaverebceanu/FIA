@@ -2,5 +2,5 @@ type,clothes,language,height,religion,skinColor,familiarity
 1,  kipa,    Jewish,   160,   Judaism, yellow,  medium
 2,   suit,    English, 165, Catholic,    white,   high
 3,   chiwon,  Thai,    155, Buddhism,    yellow,  medium
-4,   ie,  Romanian,    163, Orthodox,    white,   high
-5,   luna,    Lunish,  158, Lunism,  multicolor,  high
+4,   ie,  Romanian,    165, Orthodox,    white,   high
+5,   luna,    Lunish,  160, Lunism,     white,  high
