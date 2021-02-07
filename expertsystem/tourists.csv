@@ -1,7 +1,7 @@
 type,clothes,language,height,religion,Skin color,familiarity with Luna-City
-jew,  kipa,    Jewish,   160,   Judaism, yellow,  medium
-american,   suit,    English, 165, Catholic,    white,   high
-buddhist,   chiwon,  Thai,    155, Buddhism,    yellow,  medium
-romanian,   ie,  Romanian,    165, Orthodox,    white,   high
-australian, sunglasses, English, 165, Catholic, red, low
-lunian,   luna,    Lunish,  160, Lunism,     white,  high
+jew,kipa,Jewish,160,Judaism,yellow,medium
+american,suit,English,165,Catholic,white,high
+buddhist,chiwon,Thai,155,Buddhism,yellow,medium
+romanian,ie,Romanian,165,Orthodox,white,high
+australian,sunglasses,English,165,Catholic,red,low
+lunian,luna,Lunish,160,Lunism,white,high
