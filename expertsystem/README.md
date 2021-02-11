@@ -2,7 +2,7 @@
 ## Tabel of Content
 1. [ Description ](#desc)
 2. [ Getting Started](#start)
-3. [ How to run] (#running)
+3. [ How to run](#running)
 
 <a name="desc"></a>
 ## 1. Description
@@ -25,5 +25,9 @@ CMD ["swipl", "./shell.pl" ]
 <a name="running"></a>
 ## 3. How to run
 Once you installed SWIPL (in case of local running not with an Docker Image), open you cmd and route to the directory where is your system implemented.
-![alt text]()
+Type the command highlighted below with yellow:
+![alt text](https://github.com/mirelaverebceanu/FIA/blob/main/expertsystem/screenshot/run%20shell.PNG)
+Then you should be able to run as followed:
+![alt text](https://github.com/mirelaverebceanu/FIA/blob/main/expertsystem/screenshot/forward.PNG)
+
 
