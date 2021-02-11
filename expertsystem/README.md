@@ -1,1 +1,25 @@
-# Laboratory work nr 1
+# Laboratory work nr 1 - Expert System
+## Tabel of Content
+1. [ Description. ](#desc)
+2. [ Getting Started](#start)
+3. [How to run] (#running)
+
+<a name="desc"></a>
+## 1. Description
+This is an expert system that has aim to solve a particular lunar problem – detecting tourists. This project is implemented to be able to distinguish between tourists (six types) and the Loonies from Luna-City. It has implemented both methods of reasoning, backward chaning and forward chaining.
+The project receives an input file describing a set of rules, initial facts and queries. See in the below section steps how to run it.
+<a name="start"></a>
+## 2.  Getting Started
+### This is a system created using Prolog language, therefore for local running you should:
+- have downloaded SWIPL (https://www.swi-prolog.org/download/stable), which offers a comprehensive free Prolog environment, so that you could run it from your CMD.
+
+### Running with Docked file:
+Build an image with your application:
+
+FROM swipl
+
+COPY . /
+
+CMD ["swipl", "./shell.pl" ]
+
+- Once you installed it, open you cmd and route to the directory where is your system implemented.
