@@ -27,9 +27,15 @@ CMD ["swipl", "./shell.pl" ]
 Once you installed SWIPL (in case of local running not with an Docker Image), open you cmd and route to the directory where is your system implemented.
 
 Type the command highlighted below with yellow:
+
 ![alt text](https://github.com/mirelaverebceanu/FIA/blob/main/expertsystem/screenshot/run%20shell.PNG)
 
-Then you should be able to run as followed:
-![alt text](https://github.com/mirelaverebceanu/FIA/blob/main/expertsystem/screenshot/forward.PNG)
+Then you should be able to run as followed, forward chaining example:
+
+![alt text](https://github.com/mirelaverebceanu/FIA/blob/main/expertsystem/screenshot/forward2.PNG)
+
+Backward chaining example:
+
+![alt text](https://github.com/mirelaverebceanu/FIA/blob/main/expertsystem/screenshot/backward.PNG)
 
 Available commands and more detailed information you could find in the report posted here: https://drive.google.com/drive/folders/1BS-F-TUKKN366nqshAArbauDA-06NtQ5?usp=sharing
