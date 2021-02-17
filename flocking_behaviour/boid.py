@@ -1,107 +1,95 @@
-from p5 import Vector, stroke, circle
+from p5 import Vector
 import numpy as np
 
-class Boid():
-
-    def __init__(self, x, y, width, height):
-        self.position = Vector(x, y)
-        vec = (np.random.rand(2) - 0.5)*10
-        self.velocity = Vector(*vec)
-
-        vec = (np.random.rand(2) - 0.5)/2
-        self.acceleration = Vector(*vec)
-        self.max_force = 0.3
-        self.max_speed = 5
-        self.perception = 100
-
-        self.width = width
-        self.height = height
+CANVAS_RES = (800, 600)
+PERCEPTION = 150
+MAX_SPEED = 5
+MAX_FORCE = 0.3
 
 
+def edges(current):
+    current.pos[0] %= CANVAS_RES[0]
+    current.pos[1] %= CANVAS_RES[1]
 
-    def update(self):
-        self.position += self.velocity
-        self.velocity += self.acceleration
-        #limit
-        if np.linalg.norm(self.velocity) > self.max_speed:
-            self.velocity = self.velocity / np.linalg.norm(self.velocity) * self.max_speed
+def align(current, boids):
+    steering = Vector(*np.zeros(2))
+    total = 0
+    avg_vector = Vector(*np.zeros(2))
+    for boid in boids:
+        if np.linalg.norm(np.array(boid.pos) - np.array(current.pos)) < PERCEPTION:
+            avg_vector += Vector(*boid.vel)
+            total += 1
+    if total > 0:
+        avg_vector /= total
+        avg_vector = Vector(*avg_vector)
+        avg_vector = avg_vector / np.linalg.norm(avg_vector) * MAX_SPEED
+        steering = avg_vector - Vector(*current.vel)
+    return steering
 
-        self.acceleration = Vector(*np.zeros(2))
+def cohesion(current, boids):
+    steering = Vector(*np.zeros(2))
+    total = 0
+    center_of_mass = Vector(*np.zeros(2))
+    for boid in boids:
+        if np.linalg.norm(np.array(boid.pos) - np.array(current.pos)) < PERCEPTION:
+            center_of_mass += Vector(*boid.pos)
+            total += 1
+    if total > 0:
+        center_of_mass /= total
+        center_of_mass = Vector(*center_of_mass)
+        vec_to_com = center_of_mass - Vector(*current.pos)
+        if np.linalg.norm(vec_to_com) > 0:
+            vec_to_com = (vec_to_com / np.linalg.norm(vec_to_com)) * MAX_SPEED
+        steering = vec_to_com - Vector(*current.vel)
+        if np.linalg.norm(steering) > MAX_FORCE:
+            steering = (steering / np.linalg.norm(steering)) * MAX_FORCE
 
-    def apply_behaviour(self, boids):
-        alignment = self.align(boids)
-        cohesion = self.cohesion(boids)
-        separation = self.separation(boids)
+    return steering
 
-        self.acceleration += alignment
-        self.acceleration += cohesion
-        self.acceleration += separation
+def separation(current, boids):
+    steering = Vector(*np.zeros(2))
+    total = 0
+    avg_vector = Vector(*np.zeros(2))
+    for boid in boids:
+        distance = np.linalg.norm(np.array(boid.pos) - np.array(current.pos))
+        if current.pos != boid.pos and distance < PERCEPTION:
+            diff = Vector(*current.pos) - Vector(*boid.pos)
+            diff /= distance
+            avg_vector += diff
+            total +=1
+    if total > 0:
+        avg_vector /= total
+        avg_vector = Vector(*avg_vector)
+        if np.linalg.norm(steering) > 0:
+            avg_vector = (avg_vector / np.linalg.norm(steering)) * MAX_SPEED
+        steering = avg_vector - Vector(*current.vel)
+        if np.linalg.norm(steering) > MAX_FORCE:
+            steering = (steering / np.linalg.norm(steering)) * MAX_FORCE
 
-    def edges(self):
-        if self.position.x > self.width:
-            self.position.x = 0
-        elif self.position.x < 0:
-            self.position.x = self.width
+    return steering
 
-        if self.position.y > self.height:
-            self.position.y = 0
-        elif self.position.y < 0:
-            self.position.y = self.height
+def apply_behaviour(current, boids):
+    alignment = align(current, boids)
+    cohesionment = cohesion(current, boids)
+    separationment = separation(current, boids)
 
-    def align(self, boids):
-        steering = Vector(*np.zeros(2))
-        total = 0
-        avg_vector = Vector(*np.zeros(2))
-        for boid in boids:
-            if np.linalg.norm(boid.position - self.position) < self.perception:
-                avg_vector += boid.velocity
-                total += 1
-        if total > 0:
-            avg_vector /= total
-            avg_vector = Vector(*avg_vector)
-            avg_vector = (avg_vector / np.linalg.norm(avg_vector)) * self.max_speed
-            steering = avg_vector - self.velocity
+    current.acceleration = Vector(*np.zeros(2))
 
-        return steering
+    current.acceleration += alignment
+    current.acceleration += cohesionment
+    current.acceleration += separationment
 
-    def cohesion(self, boids):
-        steering = Vector(*np.zeros(2))
-        total = 0
-        center_of_mass = Vector(*np.zeros(2))
-        for boid in boids:
-            if np.linalg.norm(boid.position - self.position) < self.perception:
-                center_of_mass += boid.position
-                total += 1
-        if total > 0:
-            center_of_mass /= total
-            center_of_mass = Vector(*center_of_mass)
-            vec_to_com = center_of_mass - self.position
-            if np.linalg.norm(vec_to_com) > 0:
-                vec_to_com = (vec_to_com / np.linalg.norm(vec_to_com)) * self.max_speed
-            steering = vec_to_com - self.velocity
-            if np.linalg.norm(steering)> self.max_force:
-                steering = (steering /np.linalg.norm(steering)) * self.max_force
+def update_rock(current, boids):
+    apply_behaviour(current, boids)
 
-        return steering
+    position = Vector(*current.pos)
+    velocity = Vector(*current.vel)
+    acceleration = Vector(*((np.random.rand(2) - 0.5)/2))
 
-    def separation(self, boids):
-        steering = Vector(*np.zeros(2))
-        total = 0
-        avg_vector = Vector(*np.zeros(2))
-        for boid in boids:
-            distance = np.linalg.norm(boid.position - self.position)
-            if self.position != boid.position and distance < self.perception:
-                diff = self.position - boid.position
-                diff /= distance
-                avg_vector += diff
-                total += 1
-        if total > 0:
-            avg_vector /= total
-            avg_vector = Vector(*avg_vector)
-            if np.linalg.norm(steering) > 0:
-                avg_vector = (avg_vector / np.linalg.norm(steering)) * self.max_speed
-            steering = avg_vector - self.velocity
-            if np.linalg.norm(steering) > self.max_force:
-                steering = (steering /np.linalg.norm(steering)) * self.max_force
+    position += velocity
+    velocity += acceleration
 
-        return steering
+    if np.linalg.norm(velocity) > MAX_SPEED:
+        velocity = velocity / np.linalg.norm(velocity) * MAX_SPEED
+
+    current.acceleration = Vector(*np.zeros(2))
