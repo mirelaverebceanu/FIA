@@ -2,8 +2,8 @@ from p5 import Vector
 import numpy as np
 
 CANVAS_RES = (800, 600)
-PERCEPTION = 150
-MAX_SPEED = 5
+PERCEPTION = 100
+MAX_SPEED = 1
 MAX_FORCE = 0.3
 
 
@@ -16,7 +16,7 @@ def align(current, boids):
     total = 0
     avg_vector = Vector(*np.zeros(2))
     for boid in boids:
-        if np.linalg.norm(np.array(boid.pos) - np.array(current.pos)) < PERCEPTION:
+        if np.linalg.norm(Vector(*boid.pos) - Vector(*current.pos)) < PERCEPTION:
             avg_vector += Vector(*boid.vel)
             total += 1
     if total > 0:
@@ -80,11 +80,9 @@ def apply_behaviour(current, boids):
     current.acceleration += separationment
 
 def update_rock(current, boids):
-    apply_behaviour(current, boids)
-
-    position = Vector(*current.pos)
-    velocity = Vector(*current.vel)
-    acceleration = Vector(*((np.random.rand(2) - 0.5)/2))
+    position = Vector(*(current.pos))
+    velocity = Vector(*(current.vel))
+    acceleration = current.acceleration
 
     position += velocity
     velocity += acceleration
@@ -92,4 +90,5 @@ def update_rock(current, boids):
     if np.linalg.norm(velocity) > MAX_SPEED:
         velocity = velocity / np.linalg.norm(velocity) * MAX_SPEED
 
-    current.acceleration = Vector(*np.zeros(2))
+    current.pos = [position.x.item(), position.y.item()]
+    current.vel = [velocity.x.item(), velocity.y.item()]
