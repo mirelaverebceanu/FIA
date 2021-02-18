@@ -4,7 +4,7 @@ import numpy as np
 WIDTH = 800
 HEIGHT = 600
 PERCEPTION = 100
-MAX_SPEED = 1
+MAX_SPEED = 1.8
 MAX_FORCE = 0.3
 
 
@@ -87,7 +87,7 @@ def apply_behaviour(current, boids):
     current.acceleration += cohesionment
     current.acceleration += separationment
 
-def update_rock(current, boids):
+def update_rock(current, boids, ship, missile):
     position = Vector(*(current.pos))
     velocity = Vector(*(current.vel))
     acceleration = current.acceleration
@@ -98,5 +98,29 @@ def update_rock(current, boids):
     if np.linalg.norm(velocity) > MAX_SPEED:
         velocity = velocity / np.linalg.norm(velocity) * MAX_SPEED
 
+    if len(boids) > 3:
+            position = evade(position, velocity, acceleration, current, boids, ship, missile)
+          
     current.pos = [position.x.item(), position.y.item()]
     current.vel = [velocity.x.item(), velocity.y.item()]
+
+def evade(position, velocity, acceleration, current, boids, ship, missile):
+    missile_list = list(missile)
+    boids_list = list(boids)
+
+    diff = Vector(*current.pos) - Vector(*ship.pos)
+
+    if len(boids_list) > 0:
+        diff = Vector(*current.pos) - Vector(*boids_list[0].pos)
+    
+    update_ahead = diff.__len__() / MAX_SPEED
+    future_position = Vector(*current.pos) + Vector(*current.vel) * update_ahead
+    future_velocity = (Vector(*current.pos) - future_position) * MAX_SPEED
+
+    velocity = future_velocity - Vector(*current.vel)
+    
+    position += velocity
+    velocity += acceleration
+    
+
+    return position
