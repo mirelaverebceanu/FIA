@@ -1,4 +1,4 @@
-# Laboratory work Nr 1 - Expert System
+# Laboratory work Nr 2 - Flocking Behaviour
 ## Tabel of Content
 1. [ Description ](#desc)
 2. [ Getting Started](#start)
