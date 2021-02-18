@@ -1,15 +1,23 @@
 from p5 import Vector
 import numpy as np
 
-CANVAS_RES = (800, 600)
+WIDTH = 800
+HEIGHT = 600
 PERCEPTION = 100
 MAX_SPEED = 1
 MAX_FORCE = 0.3
 
 
 def edges(current):
-    current.pos[0] %= CANVAS_RES[0]
-    current.pos[1] %= CANVAS_RES[1]
+    if current.pos[0] > WIDTH:
+        current.pos[0] = 0
+    elif current.pos[0] < 0:
+        current.pos[0] = WIDTH
+
+    if current.pos[1] > HEIGHT:
+        current.pos[1] = 0
+    elif current.pos[1] < 0:
+        current.pos[1] = HEIGHT
 
 def align(current, boids):
     steering = Vector(*np.zeros(2))
