@@ -98,6 +98,7 @@ def update_rock(current, boids, ship, missile):
     if np.linalg.norm(velocity) > MAX_SPEED:
         velocity = velocity / np.linalg.norm(velocity) * MAX_SPEED
 
+        position = attack(position, velocity, acceleration, current, ship)
     if len(boids) > 3:
             position = evade(position, velocity, acceleration, current, boids, ship, missile)
           
@@ -120,7 +121,16 @@ def evade(position, velocity, acceleration, current, boids, ship, missile):
     velocity = future_velocity - Vector(*current.vel)
     
     position += velocity
-    velocity += acceleration
+    velocity += current.acceleration
     
+    return position
+
+def attack(position, velocity, acceleration, current, ship):
+    attack_direction = Vector(*ship.pos) - Vector(*current.pos) 
+    attack_direction = (attack_direction - Vector(*current.vel)) * MAX_SPEED
+
+    position += velocity
+    velocity += current.acceleration
 
     return position
+
